@@ -11,7 +11,7 @@ class CryptoSecretBoxEasyAsync : public Nan::AsyncWorker {
   ~CryptoSecretBoxEasyAsync() {}
 
   void Execute () {
-    crypto_secretbox_easy((unsigned char *) message, cipher, ciphertext_length, (unsigned char *) nonce, (unsigned char *) key);
+    crypto_secretbox_easy(cipher, message, ciphertext_length, (unsigned char *) nonce, (unsigned char *) key);
   }
 
   void HandleOKCallback () {
