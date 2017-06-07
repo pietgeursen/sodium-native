@@ -3,17 +3,15 @@
 
 #include "../deps/libsodium/src/libsodium/include/sodium.h"
 
-
-class CryptoSecretBoxOpenEasyAsync : public Nan::AsyncWorker {
+class CryptoSecretBoxEasyAsync : public Nan::AsyncWorker {
  public:
-  CryptoSecretBoxOpenEasyAsync(Nan::Callback *callback, const unsigned char *cipher, unsigned char *message, unsigned long long ciphertext_length, const unsigned char *nonce,
+  CryptoSecretBoxEasyAsync(Nan::Callback *callback, unsigned char *cipher, const unsigned char *message, unsigned long long ciphertext_length, const unsigned char *nonce,
                       const unsigned char *key)
     : Nan::AsyncWorker(callback), cipher(cipher), message(message), ciphertext_length(ciphertext_length), nonce(nonce), key(key)  {}
-
-  ~CryptoSecretBoxOpenEasyAsync() {}
+  ~CryptoSecretBoxEasyAsync() {}
 
   void Execute () {
-    crypto_secretbox_open_easy(message, cipher, ciphertext_length, nonce, key);
+    crypto_secretbox_easy((unsigned char *) message, cipher, ciphertext_length, (unsigned char *) nonce, (unsigned char *) key);
   }
 
   void HandleOKCallback () {
@@ -37,8 +35,8 @@ class CryptoSecretBoxOpenEasyAsync : public Nan::AsyncWorker {
   }
 
  private:
- unsigned char *message;
- const unsigned char *cipher;
+ unsigned char *cipher;
+ const unsigned char *message;
  unsigned long long ciphertext_length;
  const unsigned char *nonce;
  const unsigned char *key;
