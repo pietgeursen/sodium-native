@@ -11,6 +11,7 @@
 #include "src/crypto_pwhash_async.cc"
 #include "src/crypto_pwhash_str_async.cc"
 #include "src/crypto_pwhash_str_verify_async.cc"
+#include "src/crypto_secretbox_open_easy_async.cc"
 #include "src/macros.h"
 
 using namespace node;
@@ -286,6 +287,7 @@ NAN_METHOD(crypto_box_easy) {
   CALL_SODIUM(crypto_box_easy(CDATA(ciphertext), CDATA(message), message_length, CDATA(nonce), CDATA(public_key), CDATA(secret_key)))
 }
 
+
 NAN_METHOD(crypto_box_open_detached) {
   ASSERT_BUFFER_SET_LENGTH(info[1], ciphertext)
   ASSERT_BUFFER_MIN_LENGTH(info[0], message, ciphertext_length)
@@ -535,6 +537,25 @@ NAN_METHOD(crypto_pwhash_str_verify_async) {
     (char *) CDATA(hash),
     (const char *) CDATA(password),
     password_length
+  ));
+}
+
+NAN_METHOD(crypto_secretbox_easy_async) {
+
+  ASSERT_BUFFER_SET_LENGTH(info[1], message)
+  ASSERT_BUFFER_MIN_LENGTH(info[0], ciphertext, message_length + crypto_box_MACBYTES)
+  ASSERT_BUFFER_MIN_LENGTH(info[2], nonce, crypto_box_NONCEBYTES)
+  ASSERT_BUFFER_MIN_LENGTH(info[3], public_key, crypto_box_PUBLICKEYBYTES)
+  ASSERT_BUFFER_MIN_LENGTH(info[4], secret_key, crypto_box_SECRETKEYBYTES)
+  ASSERT_FUNCTION(info[5], callback)
+
+  Nan::AsyncQueueWorker(new CryptoSecretBoxEasyAsync(
+    new Nan::Callback(callback),
+    CDATA(ciphertext),
+    (const unsigned char *) CDATA(message),
+    message_length,
+    (const unsigned char *) CDATA(nonce),
+    (const unsigned char *) CDATA(secret_key) //public key!!!!!!??????
   ));
 }
 

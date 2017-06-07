@@ -32,6 +32,41 @@ tape('crypto_secretbox_easy', function (t) {
   t.end()
 })
 
+tape('crypto_secretbox_easy async', function (t) {
+  var message = new Buffer('Hej, Verden!')
+  var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
+
+  var key = alloc(sodium.crypto_secretbox_KEYBYTES)
+  sodium.randombytes_buf(key)
+
+  var nonce = alloc(sodium.crypto_secretbox_NONCEBYTES)
+  sodium.randombytes_buf(nonce)
+
+  t.throws(function () {
+    sodium.crypto_secretbox_easy_async(alloc(0), message, nonce, key, t.fail)
+  }, 'throws if output is too small')
+
+  t.throws(function () {
+    sodium.crypto_secretbox_easy_async(alloc(message.length), message, nonce, key, t.fail)
+  }, 'throws if output is too small')
+
+  sodium.crypto_secretbox_easy_async(output, message, nonce, key, (err, res) => {
+    t.error(err)
+    t.notEqual(res, alloc(output.length))
+
+    var result = alloc(output.length - sodium.crypto_secretbox_MACBYTES)
+    sodium.crypto_secretbox_open_easy_async(result, output, alloc(sodium.crypto_secretbox_NONCEBYTES), key, (err, res) => {
+      t.error(err)
+      t.notOk(res, 'could not decrypt')
+    })
+    sodium.crypto_secretbox_open_easy_async(result, output, alloc(sodium.crypto_secretbox_NONCEBYTES), key, (err, res) => {
+      t.error(err)
+      t.ok(res, 'could decrypt')
+      t.same(res, message, 'decrypted message is correct')
+      t.end()
+    })
+  })
+})
 tape('crypto_secretbox_easy overwrite buffer', function (t) {
   var output = alloc(Buffer.byteLength('Hej, Verden!') + sodium.crypto_secretbox_MACBYTES)
   output.write('Hej, Verden!', sodium.crypto_secretbox_MACBYTES)
