@@ -546,8 +546,7 @@ NAN_METHOD(crypto_secretbox_easy_async) {
   ASSERT_BUFFER_MIN_LENGTH(info[0], ciphertext, message_length + crypto_box_MACBYTES)
   ASSERT_BUFFER_MIN_LENGTH(info[2], nonce, crypto_box_NONCEBYTES)
   ASSERT_BUFFER_MIN_LENGTH(info[3], public_key, crypto_box_PUBLICKEYBYTES)
-  ASSERT_BUFFER_MIN_LENGTH(info[4], secret_key, crypto_box_SECRETKEYBYTES)
-  ASSERT_FUNCTION(info[5], callback)
+  ASSERT_FUNCTION(info[4], callback)
 
   Nan::AsyncQueueWorker(new CryptoSecretBoxEasyAsync(
     new Nan::Callback(callback),
@@ -555,7 +554,7 @@ NAN_METHOD(crypto_secretbox_easy_async) {
     (const unsigned char *) CDATA(message),
     message_length,
     (const unsigned char *) CDATA(nonce),
-    (const unsigned char *) CDATA(secret_key) //public key!!!!!!??????
+    (const unsigned char *) CDATA(public_key) //public key!!!!!!??????
   ));
 }
 
@@ -723,6 +722,7 @@ NAN_MODULE_INIT(InitAll) {
 
   EXPORT_FUNCTION(crypto_secretbox_detached)
   EXPORT_FUNCTION(crypto_secretbox_easy)
+  EXPORT_FUNCTION(crypto_secretbox_easy_async)
   EXPORT_FUNCTION(crypto_secretbox_open_detached)
   EXPORT_FUNCTION(crypto_secretbox_open_easy)
 
