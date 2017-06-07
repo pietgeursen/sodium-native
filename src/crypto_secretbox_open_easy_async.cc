@@ -2,6 +2,7 @@
 #include "macros.h"
 
 #include "../deps/libsodium/src/libsodium/include/sodium.h"
+using namespace std;
 
 
 class CryptoSecretBoxOpenEasyAsync : public Nan::AsyncWorker {
@@ -13,17 +14,19 @@ class CryptoSecretBoxOpenEasyAsync : public Nan::AsyncWorker {
   ~CryptoSecretBoxOpenEasyAsync() {}
 
   void Execute () {
-    crypto_secretbox_open_easy(message, cipher, ciphertext_length, nonce, key);
+    int res = crypto_secretbox_open_easy(message, cipher, ciphertext_length, nonce, key);
+    ok = res == 0;
   }
 
   void HandleOKCallback () {
     Nan::HandleScope scope;
 
     v8::Local<v8::Value> argv[] = {
-        Nan::Null()
+      Nan::Null(),
+      ((ok == true) ? Nan::True() : Nan::False())
     };
 
-    callback->Call(1, argv);
+    callback->Call(2, argv);
   }
 
   void HandleErrorCallback () {
@@ -37,9 +40,10 @@ class CryptoSecretBoxOpenEasyAsync : public Nan::AsyncWorker {
   }
 
  private:
- unsigned char *message;
- const unsigned char *cipher;
- unsigned long long ciphertext_length;
- const unsigned char *nonce;
- const unsigned char *key;
+  bool ok;
+  unsigned char *message;
+  const unsigned char *cipher;
+  unsigned long long ciphertext_length;
+  const unsigned char *nonce;
+  const unsigned char *key;
 };

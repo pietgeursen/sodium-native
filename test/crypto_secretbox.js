@@ -53,18 +53,17 @@ tape('crypto_secretbox_easy async', function (t) {
   sodium.crypto_secretbox_easy_async(output, message, nonce, key, (err, res) => {
     t.error(err)
     t.notEqual(output, alloc(output.length))
-    console.log(output)
 
     var result = alloc(output.length - sodium.crypto_secretbox_MACBYTES)
-    sodium.crypto_secretbox_open_easy_async(result, output, alloc(sodium.crypto_secretbox_NONCEBYTES), key, (err) => {
+    sodium.crypto_secretbox_open_easy_async(result, output, alloc(sodium.crypto_secretbox_NONCEBYTES), key, (err, ok) => {
       t.error(err)
-      t.notOk(result, 'could not decrypt')
+      t.notOk(ok, 'could not decrypt')
     })
 
     var result1 = alloc(output.length - sodium.crypto_secretbox_MACBYTES)
-    sodium.crypto_secretbox_open_easy_async(result1, output, nonce, key, (err) => {
+    sodium.crypto_secretbox_open_easy_async(result1, output, nonce, key, (err, ok) => {
       t.error(err)
-      t.ok(result1, 'could decrypt')
+      t.ok(ok, 'could decrypt')
       t.same(result1, message, 'decrypted message is correct')
       t.end()
     })

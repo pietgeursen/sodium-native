@@ -571,7 +571,7 @@ NAN_METHOD(crypto_secretbox_open_easy_async) {
     new Nan::Callback(callback),
     CDATA(ciphertext),
     CDATA(message),
-    message_length,
+    ciphertext_length,
     CDATA(nonce),
     CDATA(public_key) //public key!!!!!!??????
   ));
