@@ -113,3 +113,103 @@ tape('crypto_secretbox_detached', function (t) {
 
   t.end()
 })
+tape('crypto_secretbox_easy time for 10000', function (t) {
+  var message = new Buffer('Hej, Verden!')
+  var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
+
+  var key = alloc(sodium.crypto_secretbox_KEYBYTES)
+  sodium.randombytes_buf(key)
+
+  var nonce = alloc(sodium.crypto_secretbox_NONCEBYTES)
+  sodium.randombytes_buf(nonce)
+
+  var start = Date.now(), i = 0, end = Date.now()
+
+  for (var i = 10000; i > 0; i--) {
+    sodium.crypto_secretbox_easy(output, message, nonce, key)
+  }
+  end = Date.now()
+  var time = ((end-start)/1000)
+  t.comment(`1000 boxes in ${time}s`)
+
+  t.end()
+})
+
+tape('crypto_secretbox_easy_open time for 10000', function (t) {
+  var message = new Buffer('Hej, Verden!')
+  var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
+
+  var key = alloc(sodium.crypto_secretbox_KEYBYTES)
+  sodium.randombytes_buf(key)
+
+  var nonce = alloc(sodium.crypto_secretbox_NONCEBYTES)
+  sodium.randombytes_buf(nonce)
+
+  sodium.crypto_secretbox_easy(output, message, nonce, key)
+  var result = alloc(output.length - sodium.crypto_secretbox_MACBYTES)
+
+  var start = Date.now(), i = 0, end = Date.now()
+
+  for (var i = 10000; i > 0; i--) {
+    sodium.crypto_secretbox_open_easy(result, output, nonce, key)
+  }
+  end = Date.now()
+  var time = ((end-start)/1000)
+  t.comment(`1000 boxes in ${time}s`)
+
+  t.end()
+})
+
+tape('crypto_secretbox_easy_async time for 10000', function (t) {
+  var message = new Buffer('Hej, Verden!')
+  var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
+
+  var key = alloc(sodium.crypto_secretbox_KEYBYTES)
+  sodium.randombytes_buf(key)
+
+  var nonce = alloc(sodium.crypto_secretbox_NONCEBYTES)
+  sodium.randombytes_buf(nonce)
+
+
+  var start = Date.now(), i = 0, k = 0, end = Date.now()
+  var logIfDone = (err, res) => {
+    k++
+    if(k >= 10000){
+      end = Date.now()
+      var time = ((end-start)/1000)
+      t.comment(`1000 boxes in ${time}s`)
+      t.end()
+    }
+  }
+
+  for (var i = 10000; i > 0; i--) {
+    sodium.crypto_secretbox_easy_async(output, message, nonce, key, logIfDone ) 
+  }
+})
+tape('crypto_secretbox_easy_open_async time for 10000', function (t) {
+  var message = new Buffer('Hej, Verden!')
+  var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
+
+  var key = alloc(sodium.crypto_secretbox_KEYBYTES)
+  sodium.randombytes_buf(key)
+
+  var nonce = alloc(sodium.crypto_secretbox_NONCEBYTES)
+  sodium.randombytes_buf(nonce)
+
+  sodium.crypto_secretbox_easy(output, message, nonce, key)
+  var result = alloc(output.length - sodium.crypto_secretbox_MACBYTES)
+
+  var start = Date.now(), i = 0, k = 0, end = Date.now()
+  var logIfDone = (err, res) => {
+    k++
+    if(k >= 10000){
+      end = Date.now()
+      var time = ((end-start)/1000)
+      t.comment(`1000 boxes in ${time}s`)
+      t.end()
+    }
+  }
+  for (var i = 10000; i > 0; i--) {
+    sodium.crypto_secretbox_open_easy_async(result, output, nonce, key, logIfDone)
+  }
+})
