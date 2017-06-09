@@ -13,6 +13,7 @@
 #include "src/crypto_pwhash_str_verify_async.cc"
 #include "src/crypto_secretbox_open_easy_async.cc"
 #include "src/crypto_secretbox_easy_async.cc"
+#include "src/crypto_scalarmult_async.cc"
 #include "src/macros.h"
 
 using namespace node;
@@ -593,6 +594,19 @@ NAN_METHOD(crypto_scalarmult) {
   CALL_SODIUM(crypto_scalarmult(CDATA(shared_secret), CDATA(secret_key), CDATA(public_key)))
 }
 
+NAN_METHOD(crypto_scalarmult_async) {
+  ASSERT_BUFFER_MIN_LENGTH(info[0], shared_secret, crypto_scalarmult_BYTES)
+  ASSERT_BUFFER_MIN_LENGTH(info[1], secret_key, crypto_scalarmult_SCALARBYTES)
+  ASSERT_BUFFER_MIN_LENGTH(info[2], public_key, crypto_scalarmult_BYTES)
+  ASSERT_FUNCTION(info[3], callback)
+
+  Nan::AsyncQueueWorker(new CryptoScalarMultAsync(
+    new Nan::Callback(callback),
+    CDATA(shared_secret),
+    (const unsigned char *)CDATA(secret_key),
+    (const unsigned char *)CDATA(public_key) //public key!!!!!!??????
+  ));
+}
 // crypto_shorthash
 
 NAN_METHOD(crypto_shorthash) {
@@ -825,6 +839,7 @@ NAN_MODULE_INIT(InitAll) {
 
   EXPORT_FUNCTION(crypto_scalarmult_base)
   EXPORT_FUNCTION(crypto_scalarmult)
+  EXPORT_FUNCTION(crypto_scalarmult_async)
 
   // crypto_shorthash
 

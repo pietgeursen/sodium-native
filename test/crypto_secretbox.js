@@ -113,8 +113,10 @@ tape('crypto_secretbox_detached', function (t) {
 
   t.end()
 })
+const runNum = 1000000
 tape('crypto_secretbox_easy time for 10000', function (t) {
-  var message = new Buffer('Hej, Verden!')
+  var str = 'pietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpiet'
+  var message = new Buffer(str)
   var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
 
   var key = alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -125,7 +127,7 @@ tape('crypto_secretbox_easy time for 10000', function (t) {
 
   var start = Date.now(), i = 0, end = Date.now()
 
-  for (var i = 10000; i > 0; i--) {
+  for (var i = runNum; i > 0; i--) {
     sodium.crypto_secretbox_easy(output, message, nonce, key)
   }
   end = Date.now()
@@ -136,7 +138,8 @@ tape('crypto_secretbox_easy time for 10000', function (t) {
 })
 
 tape('crypto_secretbox_easy_open time for 10000', function (t) {
-  var message = new Buffer('Hej, Verden!')
+  var str = 'pietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpiet'
+  var message = new Buffer(str)
   var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
 
   var key = alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -150,7 +153,7 @@ tape('crypto_secretbox_easy_open time for 10000', function (t) {
 
   var start = Date.now(), i = 0, end = Date.now()
 
-  for (var i = 10000; i > 0; i--) {
+  for (var i = runNum; i > 0; i--) {
     sodium.crypto_secretbox_open_easy(result, output, nonce, key)
   }
   end = Date.now()
@@ -161,7 +164,8 @@ tape('crypto_secretbox_easy_open time for 10000', function (t) {
 })
 
 tape('crypto_secretbox_easy_async time for 10000', function (t) {
-  var message = new Buffer('Hej, Verden!')
+  var str = 'pietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpiet'
+  var message = new Buffer(str)
   var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
 
   var key = alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -174,7 +178,7 @@ tape('crypto_secretbox_easy_async time for 10000', function (t) {
   var start = Date.now(), i = 0, k = 0, end = Date.now()
   var logIfDone = (err, res) => {
     k++
-    if(k >= 10000){
+    if(k >= runNum){
       end = Date.now()
       var time = ((end-start)/1000)
       t.comment(`1000 boxes in ${time}s`)
@@ -182,12 +186,13 @@ tape('crypto_secretbox_easy_async time for 10000', function (t) {
     }
   }
 
-  for (var i = 10000; i > 0; i--) {
+  for (var i = runNum; i > 0; i--) {
     sodium.crypto_secretbox_easy_async(output, message, nonce, key, logIfDone ) 
   }
 })
 tape('crypto_secretbox_easy_open_async time for 10000', function (t) {
-  var message = new Buffer('Hej, Verden!')
+  var str = 'pietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpietpiet'
+  var message = new Buffer(str)
   var output = alloc(message.length + sodium.crypto_secretbox_MACBYTES)
 
   var key = alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -202,14 +207,14 @@ tape('crypto_secretbox_easy_open_async time for 10000', function (t) {
   var start = Date.now(), i = 0, k = 0, end = Date.now()
   var logIfDone = (err, res) => {
     k++
-    if(k >= 10000){
+    if(k >= runNum){
       end = Date.now()
       var time = ((end-start)/1000)
       t.comment(`1000 boxes in ${time}s`)
       t.end()
     }
   }
-  for (var i = 10000; i > 0; i--) {
+  for (var i = runNum; i > 0; i--) {
     sodium.crypto_secretbox_open_easy_async(result, output, nonce, key, logIfDone)
   }
 })
